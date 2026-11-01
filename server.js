@@ -25,7 +25,7 @@ function broadcast(data) {
 }
 
 function startTikTok() {
-  const tiktok = new Connection(USERNAME);
+  const tiktok = new Connection(USERNAME, {});
 
   tiktok.connect()
     .then(() => console.log('Connected to live'))
