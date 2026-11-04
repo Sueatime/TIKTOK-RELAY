@@ -35,7 +35,7 @@ function currentMonth() {
   return new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString().slice(0, 7);
 }
 
-async function saveScore(user, game, points) {
+async function saveScore(user, game, points, win) {
   const res = await fetch(SUPABASE_URL + '/rest/v1/scores', {
     method: 'POST',
     headers: {
@@ -47,6 +47,7 @@ async function saveScore(user, game, points) {
       viewer_name: user,
       game: game,
       points: points,
+      is_win: win === true,
       month: currentMonth(),
     }),
   });
@@ -73,7 +74,7 @@ wss.on('connection', (ws) => {
     if (!last || Date.now() - last > RECENT_MS) return; // not a real recent commenter
 
     if (!SUPABASE_URL || !SUPABASE_SECRET_KEY) return;
-    saveScore(user, game, points).catch((e) => console.log('Save error:', e.message));
+    saveScore(user, game, points, m.win === true).catch((e) => console.log('Save error:', e.message));
   });
 });
 
